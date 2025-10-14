@@ -1,5 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem; // Importante
+using UnityEngine.InputSystem;
 
 public class UnitController : MonoBehaviour
 {
@@ -9,25 +11,35 @@ public class UnitController : MonoBehaviour
     Transform selectedUnit;
     bool unitSelected;
     GridManager gridManager;
+    
+    List<Node> path = new List<Node>();
+    PathFinding pathFinder;
 
     void Start()
     {
-        gridManager = FindObjectOfType<GridManager>();
         if (mainCamera == null) mainCamera = Camera.main;
+        gridManager = FindObjectOfType<GridManager>();
+        pathFinder = GetComponent<PathFinding>();
     }
 
     void Update()
     {
-        // Nuevo Input System: usa Mouse.current
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            RaycastHit hit;
+            
+            bool hasHit = Physics.Raycast(ray, out hit);
+            if (hasHit)
             {
                 if (hit.transform.CompareTag("Tile") && unitSelected)
                 {
-                    Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
-                    selectedUnit.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
+                    //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
+                    //selectedUnit.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
+                    Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
+                    Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.unityGridSize;
+                    pathFinder.SetNewDestination(startCords, targetCords);
+                    RecalculatePath(true);
                 }
 
                 if (hit.transform.CompareTag("Unit"))
@@ -36,6 +48,43 @@ public class UnitController : MonoBehaviour
                     unitSelected = true;
                 }
             }
+        }
+    }
+    
+    void RecalculatePath(bool resetPath)
+    {
+        Vector2Int coordinates = new Vector2Int();
+        if (resetPath)
+        {
+            coordinates = pathFinder.StartCords;
+        }
+        else
+        {
+            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
+        }
+        StopAllCoroutines();
+        path.Clear();
+        path = pathFinder.GetNewPath(coordinates);
+        StartCoroutine(FollowPath());
+    }
+    
+    IEnumerator FollowPath()
+    {
+        for (int i = 1; i < path.Count; i++)
+        {
+            Vector3 startPosition = selectedUnit.position;
+            Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].cords);
+            float travelPercent = 0f;
+
+            selectedUnit.LookAt(endPosition);
+
+            while (travelPercent < 1f)
+            {
+                travelPercent += Time.deltaTime * movementSpeed;
+                selectedUnit.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
+                yield return new WaitForEndOfFrame();
+            }
+
         }
     }
 }

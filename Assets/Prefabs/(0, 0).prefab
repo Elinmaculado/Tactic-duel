@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 1295698528593540331}
   - component: {fileID: 2503322315279869526}
   - component: {fileID: 8103437896028617630}
+  - component: {fileID: 6737854915952552268}
   m_Layer: 0
   m_Name: (0, 0)
   m_TagString: Tile
@@ -100,6 +101,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376035f6e1cd79043ac65dcba0be7615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Labeler
+  cords: {x: 0, y: 0}
+--- !u!114 &6737854915952552268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3492528786566912713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e4048a1779e4c440bdedf8717779737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Tile
+  cords: {x: 0, y: 0}
 --- !u!1 &7444141226874272465
 GameObject:
   m_ObjectHideFlags: 0
