@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NewPlayModeScenario
   m_EditorClassIdentifier: Unity.Multiplayer.PlayMode.Scenarios.Editor::Unity.Multiplayer.PlayMode.Scenarios.Editor.ScenarioConfig
   m_Description: 
-  m_EnableEditors: 1
+  m_EnableEditors: 0
   m_MainEditorInstance:
     Name: Main Editor
     <CorrespondingNodeId>k__BackingField: Main Editor|0_run
