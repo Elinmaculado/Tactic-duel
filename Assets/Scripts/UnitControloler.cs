@@ -37,7 +37,8 @@ public class UnitController : MonoBehaviour
                     //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
                     //selectedUnit.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
                     Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
-                    Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.unityGridSize;
+                    // Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.unityGridSize;
+                    Vector2Int startCords = gridManager.GetCoordinatesFromPosition(selectedUnit.transform.position);
                     pathFinder.SetNewDestination(startCords, targetCords);
                     RecalculatePath(true);
                 }
@@ -60,11 +61,20 @@ public class UnitController : MonoBehaviour
         }
         else
         {
-            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
+            coordinates *= gridManager.GetCoordinatesFromPosition(transform.position);
         }
         StopAllCoroutines();
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
+        // Debug visual del path
+        foreach (Node node in path)
+        {
+            Vector3 pos = gridManager.GetPositionFromCoordinates(node.cords);
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.position = pos + Vector3.up * 0.5f;
+            sphere.transform.localScale = Vector3.one * 0.3f;
+            Destroy(sphere, 2f);
+        }
         StartCoroutine(FollowPath());
     }
     
@@ -72,7 +82,7 @@ public class UnitController : MonoBehaviour
     {
         for (int i = 1; i < path.Count; i++)
         {
-            Vector3 startPosition = selectedUnit.position;
+            Vector3 startPosition = selectedUnit.transform.position;
             Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].cords);
             float travelPercent = 0f;
 

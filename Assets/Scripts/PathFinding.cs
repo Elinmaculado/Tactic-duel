@@ -54,7 +54,8 @@ public class PathFinding : MonoBehaviour
 
         bool isRunning = true;
 
-        frontier.Enqueue(grid[coordinates]);
+        //frontier.Enqueue(grid[coordinates]);
+        frontier.Enqueue(startNode);
         reached.Add(coordinates, grid[coordinates]);
 
         while (frontier.Count > 0 && isRunning == true)
