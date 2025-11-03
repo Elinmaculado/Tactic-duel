@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class UnitController : MonoBehaviour
+public class UnitController : NetworkBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private float movementSpeed = 1f;
@@ -17,9 +18,21 @@ public class UnitController : MonoBehaviour
 
     void Start()
     {
-        if (mainCamera == null) mainCamera = Camera.main;
+        if (!Object.HasInputAuthority)
+        {
+            gameObject.SetActive(false); // Desactiva el controlador si no es tuyo
+            return;
+        }
+
+        //if (mainCamera == null) mainCamera = Camera.main;
+        mainCamera = GetComponentInChildren<Camera>();
         gridManager = FindObjectOfType<GridManager>();
-        pathFinder = GetComponent<PathFinding>();
+        pathFinder = FindObjectOfType<PathFinding>();
+        
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+
     }
 
     void Update()
@@ -45,8 +58,12 @@ public class UnitController : MonoBehaviour
 
                 if (hit.transform.CompareTag("Unit"))
                 {
-                    selectedUnit = hit.transform;
-                    unitSelected = true;
+                    NetworkObject netObj = hit.transform.GetComponent<NetworkObject>();
+                    if (netObj != null && netObj.HasStateAuthority)
+                    {
+                        selectedUnit = hit.transform;
+                        unitSelected = true;
+                    }
                 }
             }
         }
