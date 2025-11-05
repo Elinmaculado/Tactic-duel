@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NewPlayModeScenario
   m_EditorClassIdentifier: Unity.Multiplayer.PlayMode.Scenarios.Editor::Unity.Multiplayer.PlayMode.Scenarios.Editor.ScenarioConfig
   m_Description: 
-  m_EnableEditors: 1
+  m_EnableEditors: 0
   m_MainEditorInstance:
     Name: Main Editor
     <CorrespondingNodeId>k__BackingField: Main Editor|0_run
@@ -39,6 +39,18 @@ MonoBehaviour:
     m_Nodes:
     - Instance - Build
     - Instance - Run
+    m_BuildProfile: {fileID: 11400000, guid: 6fbf25554e6fcf343ab4ad5d6d327045, type: 2}
+    advancedConfiguration:
+      m_StreamLogsToMainEditor: 1
+      m_LogsColor: {r: 0.3643, g: 0.581, b: 0.8679, a: 1}
+      m_Arguments: -screen-fullscreen 0 -screen-width 1024 -screen-height 720
+      m_DeviceID: 
+      m_DeviceName: 
+  - Name: Instance(1)
+    <CorrespondingNodeId>k__BackingField: Instance(1) - Run
+    m_Nodes:
+    - Instance(1) - Build
+    - Instance(1) - Run
     m_BuildProfile: {fileID: 11400000, guid: 6fbf25554e6fcf343ab4ad5d6d327045, type: 2}
     advancedConfiguration:
       m_StreamLogsToMainEditor: 1
